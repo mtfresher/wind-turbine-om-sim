@@ -35,6 +35,7 @@ class WindTurbinePowerSimulator:
     def _power_curve_ideal(self, v: float) -> float:
         """
         单点：给定风速，计算理想功率（无噪声）
+        P = P_rated × (3x² - 2x³), 其中 x = (v-v_in)/(v_rated-v_in)
         """
         if v < self.v_in:
             return 0.0

@@ -30,6 +30,7 @@ class WindSpeedSimulator:
     def _step_speed(self):
         """
         模拟单步风速（Ornstein–Uhlenbeck 过程）
+        dW = -(W - μ)/τ × dt + σ × √dt × N(0,1)
         """
         dw = - (self.wind_speed - self.mean_wind) / self.tau * self.dt
         dw += self.sigma * np.sqrt(self.dt) * np.random.normal()
