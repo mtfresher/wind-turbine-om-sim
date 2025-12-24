@@ -30,6 +30,11 @@ def main():
 
     # 风机功率和转速模拟
     turbine_simulator = WindTurbinePowerSimulator(v_in=3.0, v_rated=12.0, v_out=25.0, p_rated=2500.0)
+    turbine_power_second = turbine_simulator.power_from_speed(wind_speeds)  # 每秒的功率数据
+    turbine_rpm_second = turbine_simulator.rpm_from_power(turbine_power_second)
+    print("Negative values in wind_speeds:", wind_speeds[wind_speeds < 0])
+    #打印turbine_power_second中的负数
+    print("Negative values in turbine_power_second:", turbine_power_second[turbine_power_second < 0])
     turbine_power_min = turbine_simulator.power_from_speed(wind_speeds_min_average) #用于发布页面底部数据区域的有功功率（分钟）
     turbine_rpm_min = turbine_simulator.rpm_from_power(turbine_power_min)
     turbine_power_hour = turbine_simulator.power_from_speed(wind_speeds_hour_average) #用于发布页面右侧曲线功率的呈现

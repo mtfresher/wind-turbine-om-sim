@@ -58,7 +58,9 @@ class WindTurbinePowerSimulator:
 
         # 添加相对额定功率的小噪声
         noise = np.random.normal(0, self.noise_sigma * self.p_rated, size=ideal_power.shape)
-        return ideal_power + noise
+        power = ideal_power + noise
+        # 功率不能为负，确保物理意义
+        return np.maximum(0.0, power)
 
     def rpm_from_power(self, power: np.ndarray) -> np.ndarray:
         """
@@ -68,4 +70,6 @@ class WindTurbinePowerSimulator:
         """
         rpm = np.clip((power / self.p_rated) * self.rpm_rated, self.rpm_min, self.rpm_rated)
         noise = np.random.normal(0, self.rpm_noise_sigma, size=rpm.shape)
-        return rpm + noise
+        rpm = rpm + noise
+        # 转速也不能为负，确保物理意义
+        return np.clip(rpm, self.rpm_min, self.rpm_rated)

@@ -35,6 +35,8 @@ class WindSpeedSimulator:
         dw = - (self.wind_speed - self.mean_wind) / self.tau * self.dt
         dw += self.sigma * np.sqrt(self.dt) * np.random.normal()
         self.wind_speed += dw
+        # 风速不能为负，确保物理意义
+        self.wind_speed = max(0.0, self.wind_speed)
         return self.wind_speed
 
     def _wrap_angle(self, angle_deg):
