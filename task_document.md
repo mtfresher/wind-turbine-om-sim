@@ -1,18 +1,12 @@
-# 水轮机泵设备智能运维助手构建方案
+### CCHUB
 
----
-
-## 📋 问题定义与需求分析
-
-### 用户需求
-- **问题描述**：如何构建一个水轮机泵设备的水利性能运维助手？
-
-### 平台方案概述
 基于用户需求，将采用 CCHUB 平台的完整运维助手构建方案，通过多层次工具链完成助手开发与发布。
 
 ---
+<br/>
+<small>
 
-## 💭 AI 分析与思考
+## 💭 调研
 
 <thought>
 **用户背景分析**
@@ -36,40 +30,46 @@
 - 所有技术点均标注搜索结果来源，确保规范引用
 </thought>
 
-### 📚 关键技术资料与参考链接
+### 关键技术资料与参考链接
 
 **智能监测系统**
-- https://max.book118.com/html/2025/1205/5302314303013024.shtm
-- https://max.book118.com/html/2025/1122/5344000233013020.shtm
+- <span style="color:#8585f2">\`https://max.book118.com/html/2025/1205/5302314303013024.shtm\`</span>
+- <span style="color:#8585f2">\`https://max.book118.com/html/2025/1122/5344000233013020.shtm\`</span>
 
 **水轮机运行与性能**
-- https://www.docin.com/p-4865425772.html
-- https://baijiahao.baidu.com/s?id=1841577009957004732&wfr=spider&for=pc
+- <span style="color:#8585f2">\`https://www.docin.com/p-4865425772.html\`</span>
+- <span style="color:#8585f2">\`https://baijiahao.baidu.com/s?id=1841577009957004732&wfr=spider&for=pc\`</span>
 
 **技术应用与案例**
-- https://zhuanlan.zhihu.com/p/638960074
-- https://zhuanlan.zhihu.com/p/450530554
+- <span style="color:#8585f2">\`https://zhuanlan.zhihu.com/p/638960074\`</span>
+- <span style="color:#8585f2">\`https://zhuanlan.zhihu.com/p/450530554\`</span>
 
 **行业前沿资源**
-- https://biztechmagazine.com/article/2025/12/tech-trends-energy-oil-and-gas-2026
-- https://assets.contentstack.io/v3/assets/blt48aa6d55e5ea5700/bltb096dc10156d29c9/69179851e044f95cb60bb52b/HPE_2025-2026_Action_Plan.pdf
+- <span style="color:#8585f2">\`https://biztechmagazine.com/article/2025/12/tech-trends-energy-oil-and-gas-2026\`</span>
+- <span style="color:#8585f2">\`https://assets.contentstack.io/v3/assets/blt48aa6d55e5ea5700/bltb096dc10156d29c9/69179851e044f95cb60bb52b/HPE_2025-2026_Action_Plan.pdf\`</span>
 
 **学术研究**
-- https://www.tsinghua.edu.cn/info/1182/123092.htm
-- https://asme-turboexpo.secure-platform.com/a/solicitations/223/sessiongallery/15274/application/123332
-- https://www.sciengine.com/JHE/doi/10.13243/j.cnki.slxb.20240839
+- <span style="color:#8585f2">\`https://www.tsinghua.edu.cn/info/1182/123092.htm\`</span>
+- <span style="color:#8585f2">\`https://asme-turboexpo.secure-platform.com/a/solicitations/223/sessiongallery/15274/application/123332\`</span>
+- <span style="color:#8585f2">\`https://www.sciengine.com/JHE/doi/10.13243/j.cnki.slxb.20240839\`</span>
+
+</small>
 
 ---
+<br/>
 
-## 🛠️ 运维助手构建流程
+## CCHUB
 
 根据调研情况已生成水轮机泵设备的运维知识库文档。
 
-**生成文档**：[水轮机泵设备运维知识库.md](./水轮机泵设备运维知识库.md)
+**生成文档**：<span style="color:#8585f2">水轮机泵设备运维知识库.md</span>
+<br/>
+
+## CCHUB
 
 现开始助手构建工作。
 
-### 构建步骤
+#### 🛠️ 运维助手构建流程
 
 | 步骤 | 任务名称 | 优先级 | 工具 | 状态 |
 |------|--------|------|------|------|
@@ -83,32 +83,33 @@
 
 **1️⃣ 选择导入模型** [必须]
 - 操作：从CCHUB-模型库进行设备查询和选择
-- 链接：[打开工具构建](#)
+- 链接：<span style="color:#64dd64">[打开工具构建]</span>
 
 **2️⃣ 实时数据接入** [强烈推荐]
 - 操作：从CCHUB-CCfusion完成硬件数据接入
-- 链接：[打开工具构建](#)
+- 链接：<span style="color:#64dd64">[打开工具构建]</span>
 
 **3️⃣ 构建机理和孪生模型** [强烈推荐]
 - 操作：从CCHUB-SimuReal完成虚拟物理模型和孪生模型生成
-- 链接：[打开工具构建](#)
+- 链接：<span style="color:#64dd64">[打开工具构建]</span>
 
 **4️⃣ AI知识库构建** [强烈推荐]
 - 操作：从CCHUB-知识库完成运维知识库构建
-- 链接：[打开工具构建](#)
+- 链接：<span style="color:#64dd64">[打开工具构建]</span>
 
 **5️⃣ 运维助手发布配置** [必须]
 - 操作：从CCHUB-SimuReal完成助手发布页面配置
-- 链接：[一键配置](#)
+- 链接：<span style="color:#64dd64">[一键配置]</span>
 
 ---
+<br/>
 
-## 📤 发布阶段
+## CCHUB
 
-**当前进度**：所有构建步骤已完成 ✅
+所有构建步骤已完成 ✅
 
 **后续操作**：
-- 可直接点击 [发布](#) 完成助手上线
+- 可直接点击 <span style="color:#FF4500">[发布]</span> 完成助手上线
 - 或点击上述工具进行助手内容的配置修改
 - 支持迭代优化与持续更新
 
