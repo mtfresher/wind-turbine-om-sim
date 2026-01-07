@@ -48,18 +48,30 @@ def main():
     # v_rated = 13.0  # 额定风速 (m/s
     # v_out = 50.0    # 切出风速 (m/s)
     # p_rated = 0.6 # 额定功率 (kW）
+    # rpm_rated = 1200.0  # 额定转速 (rpm)
+    # rpm_min = 200.0     # 最低运行转速 (rpm)
     
     # #2.5MW 风机模拟参数
     # v_in = 3.0      # 切入风速 (m/s)
-    # v_rated = 12.0  # 额定风速 (m/s
+    # v_rated = 11.5  # 额定风速 (m/s
     # v_out = 25.0    # 切出风速 (m/s)
-    # p_rated = 2500.0 # 额定功率 (kW
+    # p_rated = 2500.0 # 额定功率 (kW)
+    # rpm_rated = 17.25  # 额定转速 (rpm)
+    # rpm_min = 4.5     # 最低运行转速 (rpm)
+
+    #5kW 风机模拟参数
+    v_in = 2.5      # 切入风速 (m/s)
+    v_rated = 10.0  # 额定风速 (m/s
+    v_out = 20.0    # 切出风速 (m/s)
+    p_rated = 5.0 # 额定功率 (kW)
+    rpm_rated = 300  # 额定转速 (rpm)
+    rpm_min = 75     # 最低运行转速 (rpm)
 
     # 风场模拟
     wind_field_manager = WindFieldManager(wind_speed_simulator=WindSpeedSimulator(tau=5.0, sigma=2.0, dt=1.0, mean_wind=10.0,tau_dir=30.0, sigma_dir=5.0, mean_dir=0.0))
     # wind_speeds 风速（秒）
     # wind_dirs 风向（秒）
-    wind_speeds, wind_dirs = wind_field_manager.simulate(steps=1)
+    wind_speeds, wind_dirs = wind_field_manager.simulate(steps=24*3600)
 
     # 求解1min均值风速，用于发布页面底部数据区域的有功功率（分钟）的计算
     points_per_min = int(60 / wind_field_manager.wind_speed_simulator.dt)
@@ -77,13 +89,23 @@ def main():
     # temperatures 环境温度（小时）
     temperature_simulator = TemperatureSimulator(tau=6.0, sigma=0.5, dt=1.0, mean_temp=20.0)
     temperatures = temperature_simulator.simulate(hours=24)
+    
+    # 将小时级环境温度扩展到分钟级（每个小时60分钟）
+    # 假设每个小时内温度线性变化
+    temperatures_minute = np.repeat(temperatures, 60)[:num_mins]
 
     # 风机功率和转速模拟
-    # turbine_simulator = WindTurbinePowerSimulator(v_in=3.0, v_rated=12.0, v_out=25.0, p_rated=2500.0)
-    turbine_simulator = WindTurbinePowerSimulator(v_in=2.0, v_rated=13.0, v_out=50.0, p_rated=0.6) #600W 风机
+    turbine_simulator = WindTurbinePowerSimulator(
+        v_in=v_in,
+        v_rated=v_rated,
+        v_out=v_out,
+        p_rated=p_rated,
+        rpm_min=rpm_min,
+        rpm_rated=rpm_rated
+    )
     # turbine_power_sec 有功功率 （秒）
     # turbine_rpm_sec 转速 (秒)
-    wind_speeds = np.asarray([10])
+    # wind_speeds = np.asarray([10])
     turbine_power_sec = turbine_simulator.power_from_speed(wind_speeds) #用于发布页面底部数据区域的有功功率（秒）
     turbine_rpm_sec = turbine_simulator.rpm_from_power(turbine_power_sec) #用于发布页面底部数据区域的转速（秒）
 
@@ -98,13 +120,26 @@ def main():
 
     # 风机轴承温度模拟
     # bearing_temperatures 轴承温度（分钟）
-    bearing_temp_simulator = BearingTemperatureSimulator(tau=10.0, sigma=1.0, dt=1.0, mean_temp=40.0)
-    bearing_temperatures = bearing_temp_simulator.simulate(minutes=24*60)
+    # 传入分钟级的环境温度和转速，使温度与这两个因素相关
+    bearing_temp_simulator = BearingTemperatureSimulator(
+        tau=10.0,
+        sigma=1.0,
+        dt=1.0,
+        base_temp=20.0,
+        rpm_min=rpm_min,
+        rpm_rated=rpm_rated,
+        temp_rise_at_rated=15.0,  # 额定转速时相对环境温度的温升
+    )
+    bearing_temperatures = bearing_temp_simulator.simulate(temperatures_minute, turbine_rpm_min)
 
     # 风机轴承振动模拟
     # bearing_vibrations 轴承振动（分钟）
-    bearing_vibration_simulator = BearingVibrationSimulator()
-    bearing_vibrations = bearing_vibration_simulator.simulate(steps=24*60)
+    # 将分钟级的转速传入，使振动与转速相关
+    bearing_vibration_simulator = BearingVibrationSimulator(
+        rpm_min=rpm_min,
+        rpm_rated=rpm_rated,
+    )
+    bearing_vibrations = bearing_vibration_simulator.simulate(turbine_rpm_min)
 
     # 保存数据到csv
     save_csv(wind_speeds, wind_dirs, wind_speeds_min_average, turbine_power_min, turbine_rpm_min, bearing_temperatures, bearing_vibrations, wind_speeds_hour_average, turbine_power_hour, turbine_rpm_hour, temperatures, turbine_power_sec, turbine_rpm_sec)
