@@ -43,11 +43,23 @@ def save_csv(wind_speeds, wind_dirs, wind_speeds_min_average, turbine_power_min,
 
 
 def main():
+    # # 600W 风机模拟参数
+    # v_in = 2.0      # 切入风速 (m/s)
+    # v_rated = 13.0  # 额定风速 (m/s
+    # v_out = 50.0    # 切出风速 (m/s)
+    # p_rated = 0.6 # 额定功率 (kW）
+    
+    # #2.5MW 风机模拟参数
+    # v_in = 3.0      # 切入风速 (m/s)
+    # v_rated = 12.0  # 额定风速 (m/s
+    # v_out = 25.0    # 切出风速 (m/s)
+    # p_rated = 2500.0 # 额定功率 (kW
+
     # 风场模拟
     wind_field_manager = WindFieldManager(wind_speed_simulator=WindSpeedSimulator(tau=5.0, sigma=2.0, dt=1.0, mean_wind=10.0,tau_dir=30.0, sigma_dir=5.0, mean_dir=0.0))
     # wind_speeds 风速（秒）
     # wind_dirs 风向（秒）
-    wind_speeds, wind_dirs = wind_field_manager.simulate(steps=24*3600)
+    wind_speeds, wind_dirs = wind_field_manager.simulate(steps=1)
 
     # 求解1min均值风速，用于发布页面底部数据区域的有功功率（分钟）的计算
     points_per_min = int(60 / wind_field_manager.wind_speed_simulator.dt)
@@ -67,9 +79,11 @@ def main():
     temperatures = temperature_simulator.simulate(hours=24)
 
     # 风机功率和转速模拟
-    turbine_simulator = WindTurbinePowerSimulator(v_in=3.0, v_rated=12.0, v_out=25.0, p_rated=2500.0)
+    # turbine_simulator = WindTurbinePowerSimulator(v_in=3.0, v_rated=12.0, v_out=25.0, p_rated=2500.0)
+    turbine_simulator = WindTurbinePowerSimulator(v_in=2.0, v_rated=13.0, v_out=50.0, p_rated=0.6) #600W 风机
     # turbine_power_sec 有功功率 （秒）
     # turbine_rpm_sec 转速 (秒)
+    wind_speeds = np.asarray([10])
     turbine_power_sec = turbine_simulator.power_from_speed(wind_speeds) #用于发布页面底部数据区域的有功功率（秒）
     turbine_rpm_sec = turbine_simulator.rpm_from_power(turbine_power_sec) #用于发布页面底部数据区域的转速（秒）
 
