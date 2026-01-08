@@ -10,12 +10,12 @@ class BearingTemperatureSimulator:
 
     def __init__(
         self,
+        rpm_min: float = 6.0,
+        rpm_rated: float = 15.0,
+        base_temp: float = 40.0,
         tau: float = 10.0,
         sigma: float = 1.0,
         dt: float = 1.0,
-        base_temp: float = 40.0,
-        rpm_min: float = 6.0,
-        rpm_rated: float = 15.0,
         temp_rise_at_rated: float = 15.0,
         convection_coeff: float = 0.5,
     ):
@@ -66,6 +66,7 @@ class BearingTemperatureSimulator:
         - 轴承温度 = 环境温度 + 摩擦生热温升
         - 实际温度通过热传导过程逐步向这个目标温度靠近
         - 用 Ornstein-Uhlenbeck 过程模拟温度的随机波动
+        - 当转速为0时，温度快速冷却到环境温度
         
         dT = ((T_ambient + ΔT_friction(rpm)) - T_current) / tau * dt + sigma * sqrt(dt) * N(0,1)
         
@@ -73,6 +74,11 @@ class BearingTemperatureSimulator:
         :param rpm: 当前转速（rpm）
         :return: 当前轴承温度（°C）
         """
+        # 当转速为0时，强制温度等于环境温度（无负荷运行，无摩擦热）
+        if rpm <= self.rpm_min:
+            self.current_temp = ambient_temp
+            return self.current_temp
+        
         # 计算目标温度 = 环境温度 + 摩擦生热温升
         friction_rise = self._get_friction_heat_rise(rpm)
         target_temp = ambient_temp + friction_rise

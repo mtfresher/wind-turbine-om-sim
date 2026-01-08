@@ -72,6 +72,7 @@ def main():
     # wind_speeds 风速（秒）
     # wind_dirs 风向（秒）
     wind_speeds, wind_dirs = wind_field_manager.simulate(steps=24*3600)
+    wind_speeds = np.zeros(24*3600)  # 测试用恒定风速0m/s
 
     # 求解1min均值风速，用于发布页面底部数据区域的有功功率（分钟）的计算
     points_per_min = int(60 / wind_field_manager.wind_speed_simulator.dt)
@@ -122,13 +123,8 @@ def main():
     # bearing_temperatures 轴承温度（分钟）
     # 传入分钟级的环境温度和转速，使温度与这两个因素相关
     bearing_temp_simulator = BearingTemperatureSimulator(
-        tau=10.0,
-        sigma=1.0,
-        dt=1.0,
-        base_temp=20.0,
         rpm_min=rpm_min,
-        rpm_rated=rpm_rated,
-        temp_rise_at_rated=15.0,  # 额定转速时相对环境温度的温升
+        rpm_rated=rpm_rated
     )
     bearing_temperatures = bearing_temp_simulator.simulate(temperatures_minute, turbine_rpm_min)
 

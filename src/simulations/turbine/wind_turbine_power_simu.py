@@ -72,8 +72,11 @@ class WindTurbinePowerSimulator:
         # 应用斜坡率限制（防止功率变化过快）
         power_limited = self._apply_ramp_rate_limit(power_filtered)
 
-        # 添加相对较小的噪声（在平滑后）
+        # 添加相对较小的噪声（在平滑后），但仅当有实际功率时
+        # 风速不足时（功率=0）不应添加噪声，避免虚假功率
         noise = np.random.normal(0, self.noise_sigma * self.p_rated, size=power_limited.shape)
+        # 只对理想功率大于0的点添加噪声，否则保持0
+        noise = np.where(ideal_power > 0, noise, 0)
         power = power_limited + noise
         
         # 功率不能为负，确保物理意义
@@ -125,8 +128,14 @@ class WindTurbinePowerSimulator:
         :param power: numpy 数组，单位 kW
         :return: 转速序列，单位 rpm
         """
-        rpm = np.clip((power / self.p_rated) * self.rpm_rated, self.rpm_min, self.rpm_rated)
-        noise = np.random.normal(0, self.rpm_noise_sigma, size=rpm.shape)
-        rpm = rpm + noise
-        # 转速也不能为负，确保物理意义
+        # 计算理想转速（基于功率的对应关系）
+        ideal_rpm = np.clip((power / self.p_rated) * self.rpm_rated, self.rpm_min, self.rpm_rated)
+        
+        # 生成噪声，但仅在有功率输出时才应用
+        noise = np.random.normal(0, self.rpm_noise_sigma, size=ideal_rpm.shape)
+        # 只有当功率 > 0 时才添加噪声，否则转速应直接降至最小值
+        noise = np.where(power > 0, noise, 0)
+        rpm = ideal_rpm + noise
+        
+        # 转速必须在有效范围内
         return np.clip(rpm, self.rpm_min, self.rpm_rated)

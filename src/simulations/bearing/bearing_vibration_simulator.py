@@ -63,10 +63,16 @@ class BearingVibrationSimulator:
         模拟下一个时间步（dt 分钟）的振动速度 RMS（mm/s）。
         采用 Ornstein–Uhlenbeck 类型过程，但均值随转速动态变化：
         dX = -(X - mean_rms(rpm)) / tau * dt + sigma * sqrt(dt) * N(0,1)
+        当转速为0时，振动应为0（无运行，无振动）
         
         :param rpm: 当前时刻的转速（rpm）
         :return: 当前振动速度 RMS（mm/s）
         """
+        # 当转速为0时，振动RMS应为0（无运行，无振动）
+        if rpm <= self.rpm_min:
+            self.current_rms = self.base_rms * 0.1  # 轻微背景振动
+            return self.current_rms
+        
         # 根据实时转速获取均值
         mean_rms = self._get_mean_rms_from_rpm(rpm)
         
